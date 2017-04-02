@@ -1,32 +1,52 @@
 {{extend 'main.html'}}
 
-<div class="parallax-container">
-    <div class="parallax"><img src="{{=URL('static', 'images/dota1.jpg')}}"></div>
-  </div>
-  <div class="section white">
-    <div class="row container center-align">
-      <h2 class="header" style="font-family: 'Great Vibes', cursive; font-weight: bold">pixel</h2>
-      <p class="grey-text text-darken-3 lighten-3"
-         style="font-family: 'Adobe Caslon Pro', 'Hoefler Text', Georgia, Garamond, Times, serif; font-size: 13pt">
-          Pixel is a place for creativity and imagination.<br />
-      Sign up today and share your life experience with other interesting people!</p>
-    </div>
-      <div class="row container center-align">
-          <div class="col s6 m3 offset-m3 l3 offset-l3 center-align">
-              <a class="waves-effect waves-light btn-large" href="{{=URL('default', 'user', args=['login'])}}">Sign in</a>
-          </div>
-          <div class="col s6 m4 l3 center-align">
-              <a class="waves-effect waves-light btn-large" href="{{=URL('default', 'user', args=['register'])}}">Sign Up</a>
-          </div>
-      </div>
-  </div>
-  <div class="parallax-container">
-    <div class="parallax"><img src="{{=URL('static', 'images/dota2.jpg')}}"></div>
+<div class="slider fullscreen">
+
+    <ul class="slides">
+      <li>
+        <img src="http://lorempixel.com/580/250/nature/1"> <!-- random image -->
+        <div class="caption center-align">
+          <h3>This is our big Tagline!</h3>
+          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+          <div class="carousel-fixed-item center">
+              <a class="btn waves-effect white grey-text darken-text-2">Explore</a>
+            </div>
+        </div>
+      </li>
+      <li>
+        <img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->
+        <div class="caption left-align">
+          <h3>Left Aligned Caption</h3>
+          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+          <div class="carousel-fixed-item center">
+              <a class="btn waves-effect white grey-text darken-text-2">button</a>
+            </div>
+        </div>
+      </li>
+      <li>
+        <img src="http://lorempixel.com/580/250/nature/3"> <!-- random image -->
+        <div class="caption right-align">
+          <h3>Right Aligned Caption</h3>
+          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+          <div class="carousel-fixed-item center">
+              <a class="btn waves-effect white grey-text darken-text-2">button</a>
+            </div>
+        </div>
+      </li>
+      <li>
+        <img src="http://lorempixel.com/580/250/nature/4"> <!-- random image -->
+        <div class="caption center-align">
+          <h3>This is our big Tagline!</h3>
+          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+          <div class="carousel-fixed-item center">
+              <a class="btn waves-effect white grey-text darken-text-2">button</a>
+            </div>
+        </div>
+      </li>
+    </ul>
   </div>
 <script>
-    $(document).ready(function(){
-      $('.parallax').parallax();
-    });
+$(document).ready(function(){
+ $('.slider').slider();
+});
 </script>
-
-
