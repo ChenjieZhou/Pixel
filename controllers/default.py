@@ -11,6 +11,7 @@
 import io
 import re
 
+
 # @banana
 def index():
     """
@@ -22,16 +23,62 @@ def index():
     """
     return dict()
 
+
+@auth.requires_login()
+def following():
+    user_id = long(auth.user_id)
+    return dict(user_id=user_id)
+
+
+@auth.requires_login()
+def load_following():
+    number = int(request.vars.number)
+    user_id = long(request.vars.user_id)
+    relations = db(db.relation.user_id == user_id).select(orderby=~db.relation.id)
+    # rows = db(db.shares.author==relations[2].friend).select(orderby=~db.shares.create_time)
+    rows = []
+    for relation in relations:
+        row = db(db.shares.author == relation.friend).select(orderby=~db.shares.create_time)
+        print row
+        for item in row:
+            rows.append(item)
+    print rows
+    return response.json(dict(shares=rows))
+
+
 @auth.requires_login()
 def shares():
-
     return dict()
 
 @auth.requires_login()
+def popular():
+    return dict()
+
+
+@auth.requires_login()
 def load_shares():
+    pattern = request.vars.search.lower()
     number = int(request.vars.number)
     rows = db(db.shares).select(limitby=(0, number), orderby=~db.shares.create_time)
-    return response.json(dict(shares=rows))
+    shares2 = []
+    for ele in rows:
+        string = ele.title.lower()
+        if re.search(pattern, string, flags=0):
+            shares2.append(ele)
+    return response.json(dict(shares=shares2))
+
+@auth.requires_login()
+def load_shares2():
+    pattern = request.vars.search.lower()
+    number = int(request.vars.number)
+    rows = db(db.shares).select(limitby=(0, number), orderby=~db.shares.votes)
+    shares2 = []
+    for ele in rows:
+        string = ele.title.lower()
+        if re.search(pattern, string, flags=0):
+            shares2.append(ele)
+    return response.json(dict(shares=shares2))
+
 
 @auth.requires_signature()
 def create_share():
@@ -43,15 +90,16 @@ def create_share():
                      information=request.vars.information,
                      first_name=auth.user.first_name,
                      last_name=auth.user.last_name
-                         )
+                     )
     return response.json(dict())
+
 
 @auth.requires_login()
 def load_messages():
     share_id = long(request.vars.share_id)
-    messages = db(db.messages.share_id==share_id).select(orderby=~db.messages.create_time)
+    messages = db(db.messages.share_id == share_id).select(orderby=~db.messages.create_time)
     for message in messages:
-        message.avatar=db(db.auth_user.id==message.author).select(db.auth_user.avatar).first().avatar
+        message.avatar = db(db.auth_user.id == message.author).select(db.auth_user.avatar).first().avatar
     return response.json(dict(messages=messages))
 
 
@@ -66,28 +114,28 @@ def create_message():
                        first_name=auth.user.first_name,
                        last_name=auth.user.last_name
                        )
-    row = db(db.shares.id==share_id).select().first()
-    row.create_time=datetime.utcnow()
+    row = db(db.shares.id == share_id).select().first()
+    row.create_time = datetime.utcnow()
     row.update_record()
     return response.json(dict())
+
 
 @auth.requires_login()
 def people():
     user_id = long(auth.user_id)
     return dict(user_id=user_id)
 
+
 @auth.requires_login()
 def load_people():
     pattern = request.vars.search.lower()
     number = int(request.vars.number)
-
 
     rows = db(db.auth_user).select(db.auth_user.id,
                                    db.auth_user.first_name,
                                    db.auth_user.last_name,
                                    db.auth_user.introduction,
                                    db.auth_user.avatar,
-                                #  field,
                                    orderby=~db.auth_user.create_time
                                    )
     people = []
@@ -99,22 +147,13 @@ def load_people():
         temp['introduction'] = row.introduction
         temp['avatar'] = row.avatar
         authorshares = db(db.shares.author == row.id).select(limitby=(0, 3))
-        # print authorshares[0].picture
-        # temp['url'] = authorshares[0].url
         shares = []
         for eachshare in authorshares:
             item = {}
             item['picture'] = eachshare.picture
-            # print item
             shares.append(item)
-            # print shares
 
-        #         shares.append(eachshare)
         temp['shares'] = shares
-        # print temp['shares']
-        # print temp
-
-        # people.append(temp)
         if len(people) < number:
             string = temp['first_name'] + ' ' + temp['last_name']
             print string
@@ -122,34 +161,15 @@ def load_people():
             if re.search(pattern, string, flags=0):
                 people.append(temp)
 
-
-
-
-    # people = []
-    # shares = []
-    # peopelshares = [];
-    # for row in rows:
-    #     # share = db(db.shares.author == row.id).selcet().first();
-    #     authorshares = db(db.shares.author == row.id).select()
-    #     for share in authorshares:
-    #         shares.append(share)
-    #     peopelshares.append(shares)
-    #     print peopelshares
-    #     if len(people) < number:
-    #         string = row.first_name + ' ' + row.last_name
-    #         string = string.lower()
-    #         if re.search(pattern, string, flags=0):
-    #             people.append(row)
-    #             # print share
     return response.json(dict(people=people))
+
 
 @auth.requires_login()
 def artists_shares():
     user_id = long(request.vars.user_id)
     number = long(request.vars.number)
-    rows = db(db.shares.author==user_id).select(orderby=~db.shares.create_time)
+    rows = db(db.shares.author == user_id).select(orderby=~db.shares.create_time)
     return response.json(dict(shares=rows[:number]))
-
 
 
 @auth.requires_login()
@@ -157,23 +177,25 @@ def profile():
     user_id = long(request.args(0))
     return dict(user_id=user_id)
 
+
 @auth.requires_login()
 def load_profile():
     user_id = long(request.vars.user_id)
-    row = db(db.auth_user.id==user_id).select(db.auth_user.introduction,
-                                              db.auth_user.address,
-                                              db.auth_user.contact_email,
-                                              db.auth_user.telephone,
-                                              db.auth_user.avatar,
-                                              db.auth_user.first_name,
-                                              db.auth_user.last_name
-                                              ).first()
+    row = db(db.auth_user.id == user_id).select(db.auth_user.introduction,
+                                                db.auth_user.address,
+                                                db.auth_user.contact_email,
+                                                db.auth_user.telephone,
+                                                db.auth_user.avatar,
+                                                db.auth_user.first_name,
+                                                db.auth_user.last_name
+                                                ).first()
     return response.json(dict(profile_dict=row))
+
 
 @auth.requires_signature()
 def update_profile():
     user_id = long(request.vars.user_id)
-    row = db(db.auth_user.id==user_id).select().first()
+    row = db(db.auth_user.id == user_id).select().first()
     row.introduction = request.vars.introduction
     row.address = request.vars.address
     row.contact_email = request.vars.contact_email
@@ -181,68 +203,75 @@ def update_profile():
     row.update_record()
     return response.json(dict(profile_dict=row))
 
+
 @auth.requires_signature()
 def update_avatar():
     user_id = long(request.args(0))
     # Warp the binary data into a file
     stream = io.BytesIO(request.vars.avatar.value)
     # Update the avatar
-    row = db(db.auth_user.id==user_id).select().first()
+    row = db(db.auth_user.id == user_id).select().first()
     row.avatar = db.auth_user.avatar.store(stream, request.vars.avatar.filename)
     row.update_record()
     return response.json(dict(profile_dict=row))
+
 
 @auth.requires_login()
 def self_shares():
     user_id = long(request.vars.user_id)
     number = long(request.vars.number)
-    rows = db(db.shares.author==user_id).select(orderby=~db.shares.create_time)
+    rows = db(db.shares.author == user_id).select(orderby=~db.shares.create_time)
     return response.json(dict(shares=rows[:number]))
+
 
 @auth.requires_signature()
 def delete_share():
     share_id = long(request.vars.share_id)
-    db(db.shares.id==share_id).delete()
+    db(db.shares.id == share_id).delete()
     return response.json(dict())
+
 
 @auth.requires_signature()
 def check_friend():
     friend = long(request.vars.user_id)
-    row = db((db.relation.user_id==auth.user_id) & (db.relation.friend==friend)).select().first()
+    row = db((db.relation.user_id == auth.user_id) & (db.relation.friend == friend)).select().first()
     flag = False
     if row is not None:
         flag = True
     return response.json(dict(flag=flag))
 
+
 @auth.requires_signature()
 def delete_friend():
     friend = long(request.vars.user_id)
-    db((db.relation.user_id==auth.user_id) & (db.relation.friend==friend)).delete()
+    db((db.relation.user_id == auth.user_id) & (db.relation.friend == friend)).delete()
     return response.json(dict())
+
 
 @auth.requires_signature()
 def add_friend():
     friend = long(request.vars.user_id)
     db.relation.insert(user_id=auth.user_id,
-                           friend=friend
-                           )
+                       friend=friend
+                       )
     return response.json(dict())
+
 
 @auth.requires_login()
 def load_friends():
     pattern = request.vars.search.lower()
     number = int(request.vars.number)
     user_id = long(request.vars.user_id)
-    relations = db(db.relation.user_id==user_id).select(orderby=~db.relation.id)
+    relations = db(db.relation.user_id == user_id).select(orderby=~db.relation.id)
     rows = []
     for relation in relations:
-        row = db(db.auth_user.id==relation.friend).select(db.auth_user.id,
-                                   db.auth_user.first_name,
-                                   db.auth_user.last_name,
-                                   db.auth_user.introduction,
-                                   db.auth_user.avatar,
-                                   orderby=~db.auth_user.create_time
-                                   ).first()
+        row = db(db.auth_user.id == relation.friend).select(db.auth_user.id,
+                                                            db.auth_user.first_name,
+                                                            db.auth_user.last_name,
+                                                            db.auth_user.introduction,
+                                                            db.auth_user.avatar,
+                                                            orderby=~db.auth_user.create_time
+                                                            ).first()
         rows.append(row)
     people = []
     for row in rows:
@@ -252,6 +281,7 @@ def load_friends():
             if re.search(pattern, string, flags=0):
                 people.append(row)
     return response.json(dict(people=people))
+
 
 def user():
     """
@@ -269,13 +299,13 @@ def user():
         @auth.requires_permission('read','table name',record_id)
     to decorate functions that need access control
     """
-    db.auth_user.email.writable=(request.args(0)!='profile')
-    db.auth_user.first_name.writable=(request.args(0)!='profile')
-    db.auth_user.last_name.writable=(request.args(0)!='profile')
-    db.auth_user.introduction.writable=(request.args(0)!='register')
-    db.auth_user.address.writable=(request.args(0)!='register')
-    db.auth_user.contact_email.writable=(request.args(0)!='register')
-    db.auth_user.telephone.writable=(request.args(0)!='register')
+    db.auth_user.email.writable = (request.args(0) != 'profile')
+    db.auth_user.first_name.writable = (request.args(0) != 'profile')
+    db.auth_user.last_name.writable = (request.args(0) != 'profile')
+    db.auth_user.introduction.writable = (request.args(0) != 'register')
+    db.auth_user.address.writable = (request.args(0) != 'register')
+    db.auth_user.contact_email.writable = (request.args(0) != 'register')
+    db.auth_user.telephone.writable = (request.args(0) != 'register')
 
     return dict(form=auth())
 
@@ -297,3 +327,9 @@ def call():
     supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv
     """
     return service()
+
+def vote():
+    shares = db.shares[request.vars.id]
+    new_votes = shares.votes + 1
+    shares.update_record(votes=new_votes)
+    return str(new_votes)

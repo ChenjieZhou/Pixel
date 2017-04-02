@@ -63,10 +63,10 @@
     </ul>
     <ul id="dropdown2" class="dropdown-content">
         <li><a href="{{=URL('default', 'shares')}}">Recent</a></li>
-        <li><a href="">Popular</a></li>
+        <li><a href="{{=URL('default', 'popular')}}">Popular</a></li>
         <li class="divider"></li>
         {{if auth.user_id is not None:}}
-        <li><a href="">Following</a></li>
+        <li><a href="{{=URL('default', 'following')}}">Following</a></li>
         {{pass}}
     </ul>
     <div class="navbar-fixed">
@@ -127,7 +127,6 @@
             <div class="row">
                 <div class="col l8 m8 s12">
                     <h5 class="white-text" style="font-family: 'Trocchi', serif;">PIXEL</h5>
-
                 </div>
                 <div class="col l4 m4 s12">
                     <h5 class="white-text" style="font-family: 'Trocchi', serif;">Contact Info</h5>
