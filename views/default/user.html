@@ -1,6 +1,13 @@
 {{extend 'main.html'}}
+<style>
+.btn {
+  background-color: #212121;
+  margin-left:10px;
+  margin-top: 10px;
+}
 
-<h2>
+</style>
+<h2 style="padding-left:50px">
 {{=T('Sign Up') if request.args(0) == 'register' else T('Log In') if request.args(0) == 'login' else T(request.args(0).replace('_',' ').title())}}
 </h2>
 

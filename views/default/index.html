@@ -3,48 +3,57 @@
 <div class="slider fullscreen">
 
     <ul class="slides">
-      <li>
-        <img src="http://lorempixel.com/580/250/nature/1"> <!-- random image -->
-        <div class="caption center-align">
-          <h3>This is our big Tagline!</h3>
-          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-          <div class="carousel-fixed-item center">
-              <a class="btn waves-effect white grey-text darken-text-2">Explore</a>
+        <li>
+            <img src="{{=URL('static', 'images/1.jpg')}}">
+            <!-- random image -->
+            <div class="caption center-align">
+                <h3>Explore Your Life!</h3>
+                <h5 class="light grey-text text-lighten-3">Join PIXEL Today.</h5>
+                <div class="carousel-fixed-item center">
+
+                    <a class="btn waves-effect white grey-text darken-text-2" href="{{=URL('default', 'user', args=['login'])}}">Log In</a>
+                    <a class="btn waves-effect white grey-text darken-text-2" href="{{=URL('default', 'user', args=['register'])}}">Sign Up</a>
+                </div>
             </div>
-        </div>
-      </li>
-      <li>
-        <img src="http://lorempixel.com/580/250/nature/2"> <!-- random image -->
-        <div class="caption left-align">
-          <h3>Left Aligned Caption</h3>
-          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-          <div class="carousel-fixed-item center">
-              <a class="btn waves-effect white grey-text darken-text-2">button</a>
+        </li>
+        <li>
+            <img src="{{=URL('static', 'images/2.jpg')}}">
+            <!-- random image -->
+            <div class="caption left-align">
+                <h3>Explore Your Life!</h3>
+                <h5 class="light grey-text text-lighten-3">Join PIXEL Today.</h5>
+                <div class="carousel-fixed-item center">
+                  <a class="btn waves-effect white grey-text darken-text-2" href="{{=URL('default', 'user', args=['login'])}}">Log In</a>
+                  <a class="btn waves-effect white grey-text darken-text-2" href="{{=URL('default', 'user', args=['register'])}}">Sign Up</a>
+                </div>
             </div>
-        </div>
-      </li>
-      <li>
-        <img src="http://lorempixel.com/580/250/nature/3"> <!-- random image -->
-        <div class="caption right-align">
-          <h3>Right Aligned Caption</h3>
-          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-          <div class="carousel-fixed-item center">
-              <a class="btn waves-effect white grey-text darken-text-2">button</a>
+        </li>
+        <li>
+            <img src="{{=URL('static', 'images/3.jpg')}}">
+            <!-- random image -->
+            <div class="caption right-align">
+                <h3>Explore Your Life!</h3>
+                <h5 class="light grey-text text-lighten-3">Join PIXEL Today.</h5>
+                <div class="carousel-fixed-item center">
+                  <a class="btn waves-effect white grey-text darken-text-2" href="{{=URL('default', 'user', args=['login'])}}">Log In</a>
+                  <a class="btn waves-effect white grey-text darken-text-2" href="{{=URL('default', 'user', args=['register'])}}">Sign Up</a>
+                </div>
             </div>
-        </div>
-      </li>
-      <li>
-        <img src="http://lorempixel.com/580/250/nature/4"> <!-- random image -->
-        <div class="caption center-align">
-          <h3>This is our big Tagline!</h3>
-          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
-          <div class="carousel-fixed-item center">
-              <a class="btn waves-effect white grey-text darken-text-2">button</a>
+        </li>
+        <li>
+            <img src="{{=URL('static', 'images/4.jpg')}}">
+            <!-- random image -->
+            <div class="caption center-align">
+                <h3>Explore Your Life!</h3>
+                <h5 class="light grey-text text-lighten-3">Join PIXEL Today.</h5>
+                <div class="carousel-fixed-item center">
+                  <a class="btn waves-effect white grey-text darken-text-2" href="{{=URL('default', 'user', args=['login'])}}">Log In</a>
+                  <a class="btn waves-effect white grey-text darken-text-2" href="{{=URL('default', 'user', args=['register'])}}">Sign Up</a>
+                </div>
             </div>
-        </div>
-      </li>
+        </li>
     </ul>
-  </div>
+</div>
 <script>
 $(document).ready(function(){
  $('.slider').slider();
