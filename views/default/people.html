@@ -30,6 +30,7 @@
 <div id="target" class="container row"></div>
 <div class="container row center-align">
     <a id="load-more" class="col s12 white waves-effect btn-large btn-flat">Load More</a>
+    <p id="load_more_text">No more artists...</p>
 </div>
 
 
@@ -101,6 +102,14 @@
                 },
                 success: function(data) {
                     ractive.set('people', data["people"]);
+                    var total_people = data["total"];
+                    if (total_people <= number) {
+                      $('#load-more').css("display", "none");
+                      $('#load_more_text').css("display", "block");
+                    } else {
+                      $('#load-more').css("display", "block");
+                      $('#load_more_text').css("display", "none");
+                    }
                     // ractive.set('peopelshares', data["peopelshares"]);
                 }
             });

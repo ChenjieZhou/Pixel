@@ -30,7 +30,7 @@
                         <input id="share-picture" type="file">
                     </div>
                     <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="Upload your picture file">
+                        <input id="file-name" class="file-path validate" type="text" placeholder="Upload your picture file">
                     </div>
                     <div id="share-picture-info"></div>
                 </div>
@@ -64,6 +64,7 @@
 <div id="target" class="row"></div>
 <div class="container row center-align">
     <a id="load-more" class="col s12 white waves-effect btn-large btn-flat">Load More</a>
+    <p id="load_more_text">No more pictures...</p>
 </div>
 <script id="template" type="text/ractive">
 <!-- Messages Modal Structure -->
@@ -200,9 +201,13 @@ $(document).ready(function(){
         }
     });
 
+
+    var search;
+    //total shares
+    var total_shares;
+
     function load_shares2() {
         var number = ractive.get('number');
-        var search = ractive.get('search');
         $.ajax("{{=URL('default', 'load_shares2', user_signature=True)}}", {
             method: "POST",
             data: {
@@ -211,6 +216,14 @@ $(document).ready(function(){
             },
             success: function(data) {
                 ractive.set('shares', data["shares"]);
+                total_shares = data["total"];
+                if (total_shares <= number) {
+                  $('#load-more').css("display", "none");
+                  $('#load_more_text').css("display", "block");
+                } else {
+                  $('#load-more').css("display", "block");
+                  $('#load_more_text').css("display", "none");
+                }
                 var $container = $('#container');
                 $container.imagesLoaded(function(){
                   $container.masonry({
@@ -234,6 +247,14 @@ $(document).ready(function(){
             },
             success: function(data) {
                 ractive.set('shares', data["shares"]);
+                total_shares = data["total"];
+                if (total_shares <= number) {
+                  $('#load-more').css("display", "none");
+                  $('#load_more_text').css("display", "block");
+                } else {
+                  $('#load-more').css("display", "block");
+                  $('#load_more_text').css("display", "none");
+                }
                 reload();
             }
         });
@@ -301,6 +322,9 @@ $(document).ready(function(){
                                 $("#share-picture-info").text("");
                                 $("#title-info").text('');
                                 $("#information-info").text('');
+                                $("#title").val('');
+                                $("#information").val('');
+                                $("#file-name").val('');
                                 reload_shares();
                             },
                             error: function () {
@@ -321,6 +345,9 @@ $(document).ready(function(){
             // No file selected
             $("#share-picture-info").text("Picture file cannot be empty.");
         }
+        $("#title").val('');
+        $("#information").val('');
+        $("#file-name").val('');
     });
     setInterval(reload, 1000);
 
@@ -342,9 +369,10 @@ $(document).ready(function(){
     $("#search").keypress(function(event) {
             if (event.which == 13) {
                 event.preventDefault();
-                var search = $(this).val();
-                ractive.set('search', search);
-                load_shares();
+                search = $(this).val();
+                console.log("1");
+                // ractive.set('search', search);
+                load_shares2();
             }
     });
 });

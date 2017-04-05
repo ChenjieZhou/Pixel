@@ -34,17 +34,26 @@ def following():
 @auth.requires_login()
 def load_following():
     number = int(request.vars.number)
+    total_shares = db(db.shares).count()
     user_id = long(request.vars.user_id)
     relations = db(db.relation.user_id == user_id).select(orderby=~db.relation.id)
     # rows = db(db.shares.author==relations[2].friend).select(orderby=~db.shares.create_time)
     rows = []
+    shares2 = []
     for relation in relations:
         row = db(db.shares.author == relation.friend).select(orderby=~db.shares.create_time)
         print row
         for item in row:
             rows.append(item)
-    print rows
-    return response.json(dict(shares=rows))
+    if (request.vars.search):
+        pattern = request.vars.search.lower()
+        for ele in rows:
+            string = ele.title.lower()
+            if re.search(pattern, string, flags=0):
+                shares2.append(ele)
+        return response.json(dict(shares=shares2, total=total_shares))
+    else:
+        return response.json(dict(shares=rows, total=total_shares))
 
 
 @auth.requires_login()
@@ -58,43 +67,49 @@ def popular():
 def load_shares_withoutlogin():
     number = int(request.vars.number)
     rows = db(db.shares).select(limitby=(0, number), orderby=~db.shares.create_time)
+    total_shares = db(db.shares).count()
+    shares2 = []
     if (request.vars.search):
         pattern = request.vars.search.lower()
-        shares2 = []
         for ele in rows:
             string = ele.title.lower()
             if re.search(pattern, string, flags=0):
                 shares2.append(ele)
-        return response.json(dict(shares=shares2))
+        return response.json(dict(shares=shares2, total=total_shares))
     else:
-        return response.json(dict(shares=rows))
+        return response.json(dict(shares=rows,total=total_shares))
 
 @auth.requires_login()
 def load_shares():
     number = int(request.vars.number)
     rows = db(db.shares).select(limitby=(0, number), orderby=~db.shares.create_time)
+    total_shares = db(db.shares).count()
+    shares2 = []
     if (request.vars.search):
         pattern = request.vars.search.lower()
-        shares2 = []
         for ele in rows:
             string = ele.title.lower()
             if re.search(pattern, string, flags=0):
                 shares2.append(ele)
-        return response.json(dict(shares=shares2))
+        return response.json(dict(shares=shares2, total=total_shares))
     else:
-        return response.json(dict(shares=rows))
+        return response.json(dict(shares=rows,total=total_shares))
 
 @auth.requires_login()
 def load_shares2():
-    pattern = request.vars.search.lower()
     number = int(request.vars.number)
     rows = db(db.shares).select(limitby=(0, number), orderby=~db.shares.votes)
+    total_shares = db(db.shares).count()
     shares2 = []
-    for ele in rows:
-        string = ele.title.lower()
-        if re.search(pattern, string, flags=0):
-            shares2.append(ele)
-    return response.json(dict(shares=shares2))
+    if (request.vars.search):
+        pattern = request.vars.search.lower()
+        for ele in rows:
+            string = ele.title.lower()
+            if re.search(pattern, string, flags=0):
+                shares2.append(ele)
+        return response.json(dict(shares=shares2, total=total_shares))
+    else:
+        return response.json(dict(shares=rows,total=total_shares))
 
 
 @auth.requires_signature()
@@ -147,7 +162,7 @@ def people():
 def load_people():
     pattern = request.vars.search.lower()
     number = int(request.vars.number)
-
+    total_people = db(db.auth_user).count()
     rows = db(db.auth_user).select(db.auth_user.id,
                                    db.auth_user.first_name,
                                    db.auth_user.last_name,
@@ -178,7 +193,7 @@ def load_people():
             if re.search(pattern, string, flags=0):
                 people.append(temp)
 
-    return response.json(dict(people=people))
+    return response.json(dict(people=people, total=total_people))
 
 
 @auth.requires_login()
