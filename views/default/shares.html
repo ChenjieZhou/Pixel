@@ -200,9 +200,12 @@ $(document).ready(function(){
         }
     });
 
+    var search;
+
+
     function load_shares() {
         var number = ractive.get('number');
-        var search = ractive.get('search');
+        // var search = ractive.get('search');
         $.ajax("{{=URL('default', 'load_shares', user_signature=True)}}", {
             method: "POST",
             data: {
@@ -342,8 +345,8 @@ $(document).ready(function(){
     $("#search").keypress(function(event) {
             if (event.which == 13) {
                 event.preventDefault();
-                var search = $(this).val();
-                ractive.set('search', search);
+                search = $(this).val();
+                // ractive.set('search', search);
                 load_shares();
             }
     });

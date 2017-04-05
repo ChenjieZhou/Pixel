@@ -96,6 +96,9 @@
                     <!-- Dropdown Trigger -->
                     {{if auth.user_id is not None:}}
                     <li><a class="dropdown-button" href="#!" data-activates="dropdown1">{{=auth.user.first_name}} {{=auth.user.last_name}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                    {{else:}}
+                    <li id="nav_login"><a class="waves-effect waves-light" href="{{=URL('default', 'user', args=['login'])}}">Log in</a></li>
+                    <li id="nav_signup"><a class="waves-effect waves-light" href="{{=URL('default', 'user', args=['register'])}}">Sign up</a></li>
                     {{pass}}
                 </ul>
 
