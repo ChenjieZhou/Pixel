@@ -3,7 +3,7 @@
 
 ## Use Guide
 
-You can visit its directly [click here](http//:http://pixel.pythonanywhere.com)  or clone it to your computer and run.
+You can visit its directly [click here](http://pixel.pythonanywhere.com)  or clone it to your computer and run.
 
 First you need to install git using this command line.
 ```
