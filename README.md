@@ -1,9 +1,9 @@
 # Pixel
-<b>-- a place for creativity and imagination.</b>
+<b>A picture sharing community.</b>
 
 ## Use Guide
 
-You can visit its website directly or clone it to your computer and run.
+You can visit its directly [click here](http//:http://pixel.pythonanywhere.com)  or clone it to your computer and run.
 
 First you need to install git using this command line.
 ```
